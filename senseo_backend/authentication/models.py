@@ -3,15 +3,10 @@ from django.db import models
 # Create your models here.
 from django.db import models
 
-
-class RFID(models.Model):
+class Configuration(models.Model):
     rfid = models.CharField(max_length=20)
 
-class Tokens(models.Model):
-    rfid = models.ForeignKey(RFID, on_delete=models.CASCADE)
-    user_name = models.CharField(max_length=20)
-
-    SIZE = (('S', 'SIMPLE'), ('D', 'DOUBLE'))
+    SIZE = (('S', 'SINGLE'), ('D', 'DOUBLE'))
     cup_size = models.CharField(max_length=1, choices=SIZE)
 
     def __str__(self) -> str:
@@ -19,7 +14,7 @@ class Tokens(models.Model):
 
 
 class CoffeeAuthenication(models.Model):    
-    token = models.ForeignKey(Tokens, on_delete=models.CASCADE)
+    token = models.ForeignKey(Configuration, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
 
 
