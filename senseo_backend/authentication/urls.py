@@ -5,5 +5,6 @@ from . import views
 
 urlpatterns = [
     path('rfid', views.RFIDAPI.as_view()),
-    path('conf', views.ConfigurationAPI.as_view())
+    path('conf', views.ConfigurationAPI.as_view()),
+    path('coffee', views.CoffeeEntryAPI.as_view())
 ]
