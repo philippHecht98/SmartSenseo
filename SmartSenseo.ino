@@ -1,6 +1,6 @@
 #include "arduino_secrets.h"
 #include <SPI.h>
-//#include <MFRC522.h>
+#include <MFRC522.h>
 
 #define RST_PIN 9
 #define SS_PIN 10
@@ -8,15 +8,13 @@
 
 #define WEIGHT_PIN A0
 
-//MFRC522 mfrc522(SS_PIN, RST_PIN);
+MFRC522 mfrc522(18, RST_PIN);
 
 
 char ssid[] = SECRET_SSID;
 char password[] = SECRET_PASSWORD;
 
-void init_weight_sensor() {
-  // TODO: check if Analog Pin is right
-  pinMode(WEIGHT_PIN, INPUT);
+void init_serial() {
   Serial.begin(9600);
 }
 
@@ -24,35 +22,46 @@ void init_wifi() {
 
 }
 
-/*
 void init_rfid() {
-  Serial.begin(9600);
-  while (!Serial);
   SPI.begin();
   mfrc522.PCD_Init();
   mfrc522.PCD_DumpVersionToSerial();
   Serial.print(F("Scan PICC to see UID, type, and data blocks"));
 }
 
-*/
 void setup() {
   // put your setup code here, to run once:
-  init_weight_sensor();
-  //init_rfid();
-}
-
-double fetch_weight() {
-  // TODO: check if Analog Pin is right
-  int analog_weight = analogRead(WEIGHT_PIN);
-  return analog_weight * WEIGHT_STEP;
+  init_serial();
+  while(!Serial); // Wait until connection to host is established
+  init_rfid();
+  Serial.print(F("finished initialising"));
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  
-  double val = fetch_weight();
-  Serial.println(val);
-  delay(2000);
+
+  // 1. check if rfid token is recognized gets iterated over again in the next loop call
+  if ( ! mfrc522.PICC_ReadCardSerial()) {
+    return;
+  }
+  mfrc522.PICC_DumpToSerial(&(mfrc522.uid));
+
+  // 2. rfid token is recognized
+
+    // 2.1 check if power is on
+
+      // - power is off
+      // power on coffee machine
+
+      // - else
+      
+  /*
+  if ( ! mfrc522.PICC_IsNewCardPresent()) {
+    return;
+  }
+  */
+  // Step 1
+//Informationsabruf des RFID-Gerätes
 
 
 }
